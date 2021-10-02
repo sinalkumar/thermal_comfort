@@ -38,6 +38,8 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 SENSOR_TYPES = {
+    'temperature': [DEVICE_CLASS_TEMPERATURE, 'Temperature', '°C'],
+    'relativehumidity': [DEVICE_CLASS_HUMIDITY, 'Relative Humidity', '%'],
     'absolutehumidity': [DEVICE_CLASS_HUMIDITY, 'Absolute Humidity', 'g/m³'],
     'heatindex': [DEVICE_CLASS_TEMPERATURE, 'Heat Index', '°C'],
     'dewpoint': [DEVICE_CLASS_TEMPERATURE, 'Dew Point', '°C'],
@@ -249,6 +251,10 @@ class SensorThermalComfort(Entity):
         """Update the state."""
         value = None
         if self._temperature and self._humidity:
+            if self._sensor_type == "temperature":
+                value = self._temperature
+            if self._sensor_type == "relativehumidity":
+                value = self._humidity
             if self._sensor_type == "dewpoint":
                 value = self.computeDewPoint(self._temperature, self._humidity)
             if self._sensor_type == "heatindex":
